@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makka Scarf - لمسة إبداع</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'brand-maroon': '#8c1c23',
+              'brand-gold': '#ca9d51',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+	
+        body {
+            font-family: 'Cairo', sans-serif;
+            /* سنطبق الأنيميشن على عنصر منفصل للخلفية لمرونة أكبر */
+            overflow-x: hidden; /* منع أي سكرول أفقي قد ينتج عن الأشكال المتحركة */
+        }
+
+        /* --- خلفية متحركة وأشكال --- */
+        .animated-background {
+	    filter: blur(10px);
+            position: fixed; /* يجعله خلف كل شيء */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* يضمن أنه خلف المحتوى */
+            overflow: hidden; /* لإخفاء الأجزاء الزائدة من الأشكال */
+            /* التدرج المتحرك */
+            background: linear-gradient(135deg, #ca9d5130, #ffffff, #8c1c2320, #ffffff);
+            background-size: 400% 400%; /* حجم أكبر يسمح بالحركة */
+            animation: gradientBG 10s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* الأشكال المتحركة (دوائر كمثال) */
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15; /* شفافية لجعلها ناعمة */
+            animation: float 2s ease-in-out infinite alternate;
+            pointer-events: none; /* تجعلها غير قابلة للتفاعل مع الماوس */
+        }
+
+        .shape1 { background-color: var(--brand-gold-color); width: 150px; height: 150px; top: 10%; left: 5%; animation-duration: 18s; }
+        .shape2 { background-color: var(--brand-maroon-color); width: 200px; height: 200px; top: 70%; left: 80%; animation-duration: 22s; animation-delay: 2s; }
+        .shape3 { background-color: var(--brand-gold-color); width: 80px; height: 80px; top: 40%; left: 70%; animation-duration: 16s; animation-delay: 1s; }
+        .shape4 { background-color: var(--brand-maroon-color); width: 120px; height: 120px; top: 85%; left: 15%; animation-duration: 20s; animation-delay: 3s; }
+        .shape5 { background-color: #ffffff; border: 2px solid var(--brand-gold-color); opacity: 0.1; width: 100px; height: 100px; top: 15%; left: 85%; animation-duration: 17s;}
+
+
+        /* Define CSS variables for colors */
+        :root {
+           --brand-maroon-color: #8c1c23;
+           --brand-gold-color: #ca9d51;
+        }
+
+        /* أنيميشن الحركة العائمة */
+        @keyframes float {
+            from { transform: translateY(0px) rotate(0deg); }
+            to   { transform: translateY(-30px) translateX(20px) rotate(45deg); }
+        }
+
+        /* --- تأثيرات الدخول --- */
+        @keyframes slideUpFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-up-fade-in {
+            animation: slideUpFadeIn 0.6s ease-out forwards;
+            opacity: 0; /* Start hidden */
+        }
+
+        /* --- تحسينات الأزرار (اختياري) --- */
+         .link-button {
+            transition: all 0.3s ease-in-out;
+            /* تدرج خفيف بدلاً من لون ثابت */
+             background-image: linear-gradient(to right, white 50%, transparent 50%);
+             background-size: 200% 100%;
+             background-position: right bottom;
+        }
+        .link-button:hover {
+            background-position: left bottom;
+            /* تغير الظل ليصبح أكثر بروزاً */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(var(--color-rgb), 0.2); /* Adjust var(--color-rgb) for each button */
+            transform: translateY(-4px) scale(1.03); /* حركة أكثر وضوحاً */
+        }
+
+         .fb-button { --color-rgb: 140, 28, 35; /* Maroon */ }
+         .ig-button { --color-rgb: 202, 157, 81; /* Gold */ }
+         .tg-button { --color-rgb: 30, 136, 229; /* Telegram Blue */ }
+
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col items-center justify-center p-6 text-gray-800">
+
+    <!-- طبقة الخلفية المتحركة والأشكال -->
+    <div class="animated-background">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+        <div class="shape shape4"></div>
+         <div class="shape shape5"></div>
+    </div>
+
+    <!-- حاوية المحتوى الرئيسية لضمان بقائها فوق الخلفية -->
+    <div class="relative z-10 w-full max-w-md mx-auto text-center bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-xl">
+        <!-- 1. الشعار -->
+        <img src="assets/logo_makka_scarf.png" alt="Makka Scarf Logo" class="w-40 sm:w-48 mx-auto mb-8 slide-up-fade-in" style="animation-delay: 0.1s;">
+        <!-- استخدم مسار الشعار الصحيح -->
+
+        <!-- 2. حاوية الروابط -->
+        <div class="space-y-5">
+            <!-- رابط فيسبوك -->
+            <a href="https://www.facebook.com/profile.php?id=100064110032114" target="_blank" rel="noopener noreferrer"
+               class="link-button fb-button flex items-center justify-center w-full border-2 border-brand-maroon text-brand-maroon rounded-lg shadow-md p-4 font-bold slide-up-fade-in"
+               style="animation-delay: 0.3s;">
+                <img src="assets/facebook-icon.png" alt="Facebook" class="w-6 h-6 ml-3"> <!-- مسار أيقونة فيسبوك -->
+                <span>فيسبوك</span>
+            </a>
+
+            <!-- رابط انستجرام -->
+            <a href="https://www.instagram.com/makka_scarf_" target="_blank" rel="noopener noreferrer"
+               class="link-button ig-button flex items-center justify-center w-full border-2 border-brand-gold text-brand-gold rounded-lg shadow-md p-4 font-bold slide-up-fade-in"
+               style="animation-delay: 0.5s;">
+                 <img src="assets/instagram-icon.png" alt="Instagram" class="w-6 h-6 ml-3"> <!-- مسار أيقونة انستجرام -->
+                <span>انستجرام</span>
+            </a>
+
+            <!-- رابط تليجرام -->
+            <a href="https://t.me/s/makkascarves" target="_blank" rel="noopener noreferrer"
+               class="link-button tg-button flex items-center justify-center w-full border-2 border-blue-500 text-blue-600 rounded-lg shadow-md p-4 font-bold slide-up-fade-in"
+               style="animation-delay: 0.7s;">
+                <img src="assets/telegram-icon.png" alt="Telegram" class="w-6 h-6 ml-3"> <!-- مسار أيقونة تليجرام -->
+                <span>تليجرام</span>
+            </a>
+             <!-- يمكنك إضافة روابط أخرى بنفس الطريقة -->
+        </div>
+
+        <!-- 3. فوتر بسيط -->
+        <footer class="mt-10 text-sm text-brand-maroon/80 slide-up-fade-in" style="animation-delay: 0.9s;">
+            © <span id="year"></span> Makka Scarf. كل الحقوق محفوظة.
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        // Note: The slide-up-fade-in animation relies purely on CSS animation-delay.
+        // You could add JS for more complex staggered entrances if needed later.
+    </script>
+</body>
+</html>
