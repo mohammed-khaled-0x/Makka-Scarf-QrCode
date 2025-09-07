@@ -103,8 +103,27 @@
             transform: translateY(-4px) scale(1.03); /* حركة أكثر وضوحاً */
         }
 
+		.tk-button {
+		    --color-rgb: 0, 0, 0; /* Black */
+		    background-image: linear-gradient(to right, white 50%, transparent 50%);
+		    background-size: 200% 100%;
+		    background-position: right bottom;
+		    color: black;
+		}
+		
+		.tk-button:hover {
+		    color: #fff;
+		    background-color: #000;
+		    background-image: none;
+		    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(var(--color-rgb), 0.2);
+		    transform: translateY(-4px) scale(1.03);
+		}
+		
+		.tk-button:hover span {
+		    color: white !important;
+		}
+
          .fb-button { --color-rgb: 140, 28, 35; /* Maroon */ }
-		.tt-button { --color-rgb: 230, 0, 0; /* Maroon */ }
          .ig-button { --color-rgb: 202, 157, 81; /* Gold */ }
          .tg-button { --color-rgb: 30, 136, 229; /* Telegram Blue */ }
 
@@ -138,12 +157,10 @@
             </a>
 
 			<!-- رابط تيك توك -->
-            <a href="https://www.tiktok.com/@makka.scarf" target="_blank" rel="noopener noreferrer"
-               class="link-button tt-button flex items-center justify-center w-full border-2 border-brand-maroon text-brand-maroon rounded-lg shadow-md p-4 font-bold slide-up-fade-in"
-               style="animation-delay: 0.3s;">
-                <img src="assets/tiktok-icon.png" alt="TikTok" class="w-6 h-6 ml-3"> <!-- مسار أيقونة فيسبوك -->
-                <span>تيك توك</span>
-            </a>
+			<a href="https://www.tiktok.com/@makka.scarf" target="_blank" rel="noopener noreferrer" class="link-button tk-button flex items-center justify-center w-full border-2 border-black text-black rounded-lg shadow-md p-4 font-bold slide-up-fade-in" style="animation-delay: 0.4s;">
+			    <img src="assets/tiktok-icon.png" alt="TikTok" class="w-6 h-6 ml-3">
+			    <span>تيك توك</span>
+			</a>
 
             <!-- رابط انستجرام -->
             <a href="https://www.instagram.com/makka_scarf_" target="_blank" rel="noopener noreferrer"
@@ -176,6 +193,7 @@
     </script>
 </body>
 </html>
+
 
 
 
