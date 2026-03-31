@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
@@ -15,185 +15,191 @@
             colors: {
               'brand-maroon': '#8c1c23',
               'brand-gold': '#ca9d51',
+            },
+            fontFamily: {
+              sans: ['Cairo', 'sans-serif'],
             }
           }
         }
       }
     </script>
     <style>
-	
         body {
-            font-family: 'Cairo', sans-serif;
-            /* سنطبق الأنيميشن على عنصر منفصل للخلفية لمرونة أكبر */
-            overflow-x: hidden; /* منع أي سكرول أفقي قد ينتج عن الأشكال المتحركة */
+            background-color: #fdfbf7;
+            overflow-x: hidden;
+            position: relative;
+            /* خلفية ناعمة جدا تليق بالموبايل من غير دوشة ولا نقط */
+            background-image: radial-gradient(circle at top right, rgba(202, 157, 81, 0.1), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(140, 28, 35, 0.1), transparent 40%);
         }
 
-        /* --- خلفية متحركة وأشكال --- */
-        .animated-background {
-	    filter: blur(10px);
-            position: fixed; /* يجعله خلف كل شيء */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* يضمن أنه خلف المحتوى */
-            overflow: hidden; /* لإخفاء الأجزاء الزائدة من الأشكال */
-            /* التدرج المتحرك */
-            background: linear-gradient(135deg, #ca9d5130, #ffffff, #8c1c2320, #ffffff);
-            background-size: 400% 400%; /* حجم أكبر يسمح بالحركة */
-            animation: gradientBG 10s ease infinite;
+        /* المربع الزجاجي */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 25px 50px -12px rgba(140, 28, 35, 0.12);
+            /* التحضير لحركة الموبايل */
+            transition: transform 0.15s ease-out;
+            transform-style: preserve-3d;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* الأشكال المتحركة (دوائر كمثال) */
-        .shape {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.15; /* شفافية لجعلها ناعمة */
-            animation: float 2s ease-in-out infinite alternate;
-            pointer-events: none; /* تجعلها غير قابلة للتفاعل مع الماوس */
-        }
-
-        .shape1 { background-color: var(--brand-gold-color); width: 150px; height: 150px; top: 10%; left: 5%; animation-duration: 18s; }
-        .shape2 { background-color: var(--brand-maroon-color); width: 200px; height: 200px; top: 70%; left: 80%; animation-duration: 22s; animation-delay: 2s; }
-        .shape3 { background-color: var(--brand-gold-color); width: 80px; height: 80px; top: 40%; left: 70%; animation-duration: 16s; animation-delay: 1s; }
-        .shape4 { background-color: var(--brand-maroon-color); width: 120px; height: 120px; top: 85%; left: 15%; animation-duration: 20s; animation-delay: 3s; }
-        .shape5 { background-color: #ffffff; border: 2px solid var(--brand-gold-color); opacity: 0.1; width: 100px; height: 100px; top: 15%; left: 85%; animation-duration: 17s;}
-
-
-        /* Define CSS variables for colors */
-        :root {
-           --brand-maroon-color: #8c1c23;
-           --brand-gold-color: #ca9d51;
-        }
-
-        /* أنيميشن الحركة العائمة */
-        @keyframes float {
-            from { transform: translateY(0px) rotate(0deg); }
-            to   { transform: translateY(-30px) translateX(20px) rotate(45deg); }
-        }
-
-        /* --- تأثيرات الدخول --- */
-        @keyframes slideUpFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        /* حركة الدخول */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .slide-up-fade-in {
-            animation: slideUpFadeIn 0.6s ease-out forwards;
-            opacity: 0; /* Start hidden */
+
+        .animate-fade-in {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
         }
 
-        /* --- تحسينات الأزرار (اختياري) --- */
-         .link-button {
-            transition: all 0.3s ease-in-out;
-            /* تدرج خفيف بدلاً من لون ثابت */
-             background-image: linear-gradient(to right, white 50%, transparent 50%);
-             background-size: 200% 100%;
-             background-position: right bottom;
-        }
-        .link-button:hover {
-            background-position: left bottom;
-            /* تغير الظل ليصبح أكثر بروزاً */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(var(--color-rgb), 0.2); /* Adjust var(--color-rgb) for each button */
-            transform: translateY(-4px) scale(1.03); /* حركة أكثر وضوحاً */
+        /* الزراير */
+        .link-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-		.tk-button {
-		    --color-rgb: 0, 0, 0; /* Black */
-		    background-image: linear-gradient(to right, white 50%, transparent 50%);
-		    background-size: 200% 100%;
-		    background-position: right bottom;
-		    color: black;
-		}
-		
-		.tk-button:hover {
-		    color: #fff;
-		    background-color: #000;
-		    background-image: none;
-		    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(var(--color-rgb), 0.2);
-		    transform: translateY(-4px) scale(1.03);
-		}
-		
-		.tk-button:hover span {
-		    color: white !important;
-		}
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+        }
 
-         .fb-button { --color-rgb: 140, 28, 35; /* Maroon */ }
-         .ig-button { --color-rgb: 202, 157, 81; /* Gold */ }
-         .tg-button { --color-rgb: 30, 136, 229; /* Telegram Blue */ }
+        /* خليت التأثير يشتغل مع الهوفر للكمبيوتر ومع اللمس للموبايل */
+        .link-btn:hover::before, .link-btn:active::before {
+            right: 0;
+        }
 
+        .link-btn:hover, .link-btn:active {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .link-btn * {
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+
+        /* ألوان التعبئة للزراير بالألوان الأصلية لكل منصة */
+        .btn-fb::before { background-color: #1877F2; } 
+        .btn-ig::before { background-image: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .btn-tg::before { background-color: #2AABEE; }
+
+        .link-btn:hover span, .link-btn:active span,
+        .link-btn:hover svg, .link-btn:active svg {
+            color: #ffffff !important;
+        }
+        
+        /* تبييض الأيقونات لما تقف عليها */
+        .link-btn:hover img, .link-btn:active img {
+            filter: brightness(0) invert(1);
+            transform: scale(1.1); 
+        }
     </style>
 </head>
-<body class="relative min-h-screen flex flex-col items-center justify-center p-6 text-gray-800">
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-8 antialiased">
 
-    <!-- طبقة الخلفية المتحركة والأشكال -->
-    <div class="animated-background">
-        <div class="shape shape1"></div>
-        <div class="shape shape2"></div>
-        <div class="shape shape3"></div>
-        <div class="shape shape4"></div>
-         <div class="shape shape5"></div>
-    </div>
-
-    <!-- حاوية المحتوى الرئيسية لضمان بقائها فوق الخلفية -->
-    <div class="relative z-10 w-full max-w-md mx-auto text-center bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-xl">
-        <!-- 1. الشعار -->
-        <img src="assets/logo_makka_scarf.png" alt="Makka Scarf Logo" class="w-40 sm:w-48 mx-auto mb-8 slide-up-fade-in" style="animation-delay: 0.1s;">
-        <!-- استخدم مسار الشعار الصحيح -->
-
-        <!-- 2. حاوية الروابط -->
-        <div class="space-y-5">
-            <!-- رابط فيسبوك -->
-            <a href="https://www.facebook.com/profile.php?id=100064110032114" target="_blank" rel="noopener noreferrer"
-               class="link-button fb-button flex items-center justify-center w-full border-2 border-brand-maroon text-brand-maroon rounded-lg shadow-md p-4 font-bold slide-up-fade-in"
-               style="animation-delay: 0.3s;">
-                <img src="assets/facebook-icon.png" alt="Facebook" class="w-6 h-6 ml-3"> <!-- مسار أيقونة فيسبوك -->
-                <span>فيسبوك</span>
-            </a>
-
-			<!-- رابط تيك توك -->
-			<a href="https://www.tiktok.com/@makka.scarf" target="_blank" rel="noopener noreferrer" class="link-button tk-button flex items-center justify-center w-full border-2 border-black text-black rounded-lg shadow-md p-4 font-bold slide-up-fade-in" style="animation-delay: 0.4s;">
-			    <img src="assets/tiktok-icon.png" alt="TikTok" class="w-6 h-6 ml-3">
-			    <span>تيك توك</span>
-			</a>
-
-            <!-- رابط انستجرام -->
-            <a href="https://www.instagram.com/makka_scarf_" target="_blank" rel="noopener noreferrer"
-               class="link-button ig-button flex items-center justify-center w-full border-2 border-brand-gold text-brand-gold rounded-lg shadow-md p-4 font-bold slide-up-fade-in"
-               style="animation-delay: 0.5s;">
-                 <img src="assets/instagram-icon.png" alt="Instagram" class="w-6 h-6 ml-3"> <!-- مسار أيقونة انستجرام -->
-                <span>انستجرام</span>
-            </a>
-
-            <!-- رابط تليجرام -->
-            <a href="https://t.me/s/makkascarves" target="_blank" rel="noopener noreferrer"
-               class="link-button tg-button flex items-center justify-center w-full border-2 border-blue-500 text-blue-600 rounded-lg shadow-md p-4 font-bold slide-up-fade-in"
-               style="animation-delay: 0.7s;">
-                <img src="assets/telegram-icon.png" alt="Telegram" class="w-6 h-6 ml-3"> <!-- مسار أيقونة تليجرام -->
-                <span>تليجرام</span>
-            </a>
-             <!-- يمكنك إضافة روابط أخرى بنفس الطريقة -->
+    <main id="tilt-card" class="glass-card w-full max-w-md rounded-[2.5rem] pt-20 pb-10 px-6 sm:px-10 relative mt-16 animate-fade-in">
+        
+        <div class="absolute -top-16 left-1/2 logo-container" style="transform: translateZ(30px) translateX(-50%);">
+            <div class="w-32 h-32 bg-white rounded-full shadow-2xl flex items-center justify-center p-3 border-4 border-white">
+                <img src="assets/logo_makka_scarf.png" alt="Makka Scarf" class="w-full h-auto object-contain">
+            </div>
         </div>
 
-        <!-- 3. فوتر بسيط -->
-        <footer class="mt-10 text-sm text-brand-maroon/80 slide-up-fade-in" style="animation-delay: 0.9s;">
+        <div class="text-center mt-2 mb-10" style="transform: translateZ(20px);">
+            <h1 class="text-3xl font-extrabold text-brand-maroon mb-2">Makka Scarf</h1>
+            <p class="text-gray-500 font-bold text-sm">لمسة إبداع في عالم الأناقة</p>
+        </div>
+
+        <div class="space-y-5" style="transform: translateZ(15px);">
+            
+            <a href="https://www.facebook.com/profile.php?id=100064110032114" target="_blank" rel="noopener noreferrer"
+               class="link-btn btn-fb flex items-center justify-between bg-white/80 border border-gray-100 rounded-2xl p-4 group" style="animation-delay: 0.1s;">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                        <img src="assets/facebook-icon.png" alt="Facebook" class="w-7 h-7">
+                    </div>
+                    <span class="font-bold text-lg text-gray-800">فيسبوك</span>
+                </div>
+                <svg class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+
+            <a href="https://www.instagram.com/makka_scarf_" target="_blank" rel="noopener noreferrer"
+               class="link-btn btn-ig flex items-center justify-between bg-white/80 border border-gray-100 rounded-2xl p-4 group" style="animation-delay: 0.2s;">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                        <img src="assets/instagram-icon.png" alt="Instagram" class="w-7 h-7">
+                    </div>
+                    <span class="font-bold text-lg text-gray-800">انستجرام</span>
+                </div>
+                <svg class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+
+            <a href="https://t.me/s/makkascarves" target="_blank" rel="noopener noreferrer"
+               class="link-btn btn-tg flex items-center justify-between bg-white/80 border border-gray-100 rounded-2xl p-4 group" style="animation-delay: 0.3s;">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                        <img src="assets/telegram-icon.png" alt="Telegram" class="w-7 h-7">
+                    </div>
+                    <span class="font-bold text-lg text-gray-800">تليجرام</span>
+                </div>
+                <svg class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+
+        </div>
+
+        <footer class="mt-12 text-center text-sm font-bold text-gray-400" style="animation-delay: 0.4s; transform: translateZ(10px);">
             © <span id="year"></span> Makka Scarf
         </footer>
-    </div>
+    </main>
 
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
-        // Note: The slide-up-fade-in animation relies purely on CSS animation-delay.
-        // You could add JS for more complex staggered entrances if needed later.
+        
+        // تشغيل الظهور بالترتيب
+        document.querySelectorAll('.link-btn, footer').forEach((el, index) => {
+            el.classList.add('animate-fade-in');
+            el.style.animationDelay = `${(index + 2) * 0.15}s`;
+            el.style.opacity = '0';
+        });
+
+        // حركة الكارت مع ميل الموبايل 
+        const card = document.getElementById('tilt-card');
+        
+        window.addEventListener('deviceorientation', (e) => {
+            if (e.beta && e.gamma) {
+                let x = (e.beta - 45) / 4; 
+                let y = e.gamma / 4;       
+                
+                x = Math.max(-15, Math.min(15, x));
+                y = Math.max(-15, Math.min(15, y));
+
+                card.style.transform = `perspective(1000px) rotateX(${-x}deg) rotateY(${y}deg)`;
+            }
+        });
+
+        // حركة الكارت مع الماوس عشان لو فتحته من الكمبيوتر
+        document.addEventListener('mousemove', (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            card.style.transform = `perspective(1000px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // ترجيع الكارت مكانه
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg)`;
+        });
     </script>
 </body>
 </html>
-
-
-
-
