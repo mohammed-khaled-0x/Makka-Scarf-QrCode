@@ -30,6 +30,8 @@
             position: relative;
             background-image: radial-gradient(circle at top right, rgba(202, 157, 81, 0.1), transparent 40%),
                               radial-gradient(circle at bottom left, rgba(140, 28, 35, 0.1), transparent 40%);
+            /* ظبطنا البعد التالت هنا عشان ترتاح */
+            perspective: 1000px;
         }
 
         .glass-card {
@@ -38,13 +40,14 @@
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.9);
             box-shadow: 0 25px 50px -12px rgba(140, 28, 35, 0.12);
-            transition: transform 0.1s ease-out;
+            transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             transform-style: preserve-3d;
+            will-change: transform;
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(30px) translateZ(0); }
+            to { opacity: 1; transform: translateY(0) translateZ(0); }
         }
 
         .animate-fade-in {
@@ -52,107 +55,118 @@
             animation: fadeInUp 0.8s ease-out forwards;
         }
 
+        /* الزراير بالألوان والتدرجات الجديدة ثابتة */
         .link-btn {
             position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
+            transform-style: preserve-3d;
         }
 
-        .link-btn::before {
-            content: '';
-            position: absolute;
+        .btn-fb {
+            background: linear-gradient(135deg, #1877F2 0%, #0c59bb 100%);
+            border: none;
+            box-shadow: 0 8px 15px rgba(24, 119, 242, 0.3);
+        }
+
+        .btn-ig {
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border: none;
+            box-shadow: 0 8px 15px rgba(220, 39, 67, 0.3);
+        }
+
+        .btn-tg {
+            background: linear-gradient(135deg, #2AABEE 0%, #1a8cc5 100%);
+            border: none;
+            box-shadow: 0 8px 15px rgba(42, 171, 238, 0.3);
+        }
+
+        /* حركة الضغطة على الموبايل */
+        .link-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* تبييض الأيقونات علطول عشان تليق على الخلفية الغامقة */
+        .link-btn img {
+            filter: brightness(0) invert(1);
+        }
+
+        /* شاشة البداية عشان ناخد الإذن من الموبايلات الرخمة */
+        #start-overlay {
+            position: fixed;
             top: 0;
-            right: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 0;
-        }
-
-        .link-btn:hover::before, .link-btn:active::before {
-            right: 0;
-        }
-
-        .link-btn:hover, .link-btn:active {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
-        }
-
-        .link-btn * {
-            position: relative;
-            z-index: 1;
-            transition: all 0.4s ease;
-        }
-
-        .btn-fb::before { background-color: #1877F2; } 
-        .btn-ig::before { background-image: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
-        .btn-tg::before { background-color: #2AABEE; }
-
-        .link-btn:hover span, .link-btn:active span,
-        .link-btn:hover svg, .link-btn:active svg {
-            color: #ffffff !important;
-        }
-        
-        .link-btn:hover img, .link-btn:active img {
-            filter: brightness(0) invert(1);
-            transform: scale(1.1); 
+            background: rgba(253, 251, 247, 0.95);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 sm:p-8 antialiased">
 
-    <main id="tilt-card" class="glass-card w-full max-w-md rounded-[2.5rem] pt-20 pb-10 px-6 sm:px-10 relative mt-16 animate-fade-in">
+    <div id="start-overlay">
+        <h2 class="text-2xl font-bold text-brand-maroon mb-4 text-center">عشان تشوف الحركات والدلع</h2>
+        <button id="start-btn" class="bg-brand-gold text-white font-bold py-3 px-8 rounded-full shadow-lg text-lg">
+            دوس هنا وابدأ
+        </button>
+    </div>
+
+    <main id="tilt-card" class="glass-card w-full max-w-md rounded-[2.5rem] pt-20 pb-10 px-6 sm:px-10 relative mt-16 animate-fade-in" style="display: none;">
         
-        <div class="absolute -top-16 left-1/2 logo-container" style="transform: translateZ(30px) translateX(-50%);">
+        <div class="absolute -top-16 left-1/2" style="transform: translateZ(40px) translateX(-50%);">
             <div class="w-32 h-32 bg-white rounded-full shadow-2xl flex items-center justify-center p-3 border-4 border-white">
                 <img src="assets/logo_makka_scarf.png" alt="Makka Scarf" class="w-full h-auto object-contain">
             </div>
         </div>
 
-        <div class="text-center mt-2 mb-10" style="transform: translateZ(20px);">
+        <div class="text-center mt-2 mb-10" style="transform: translateZ(30px);">
             <h1 class="text-3xl font-extrabold text-brand-maroon mb-2">Makka Scarf</h1>
             <p class="text-gray-500 font-bold text-sm">لمسة إبداع في عالم الأناقة</p>
-            <p class="text-xs text-brand-gold mt-2 animate-pulse" id="touch-hint">المس الشاشة لتفعيل الحركة</p>
         </div>
 
-        <div class="space-y-5" style="transform: translateZ(15px);">
+        <div class="space-y-5" style="transform: translateZ(20px);">
             
             <a href="https://www.facebook.com/profile.php?id=100064110032114" target="_blank" rel="noopener noreferrer"
-               class="link-btn btn-fb flex items-center justify-between bg-white/80 border border-gray-100 rounded-2xl p-4 group" style="animation-delay: 0.1s;">
+               class="link-btn btn-fb flex items-center justify-between rounded-2xl p-4 group" style="animation-delay: 0.1s;">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                         <img src="assets/facebook-icon.png" alt="Facebook" class="w-7 h-7">
                     </div>
-                    <span class="font-bold text-lg text-gray-800">فيسبوك</span>
+                    <span class="font-bold text-lg text-white">فيسبوك</span>
                 </div>
-                <svg class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                <svg class="w-6 h-6 text-white/70 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
             <a href="https://www.instagram.com/makka_scarf_" target="_blank" rel="noopener noreferrer"
-               class="link-btn btn-ig flex items-center justify-between bg-white/80 border border-gray-100 rounded-2xl p-4 group" style="animation-delay: 0.2s;">
+               class="link-btn btn-ig flex items-center justify-between rounded-2xl p-4 group" style="animation-delay: 0.2s;">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                         <img src="assets/instagram-icon.png" alt="Instagram" class="w-7 h-7">
                     </div>
-                    <span class="font-bold text-lg text-gray-800">انستجرام</span>
+                    <span class="font-bold text-lg text-white">انستجرام</span>
                 </div>
-                <svg class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                <svg class="w-6 h-6 text-white/70 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
             <a href="https://t.me/s/makkascarves" target="_blank" rel="noopener noreferrer"
-               class="link-btn btn-tg flex items-center justify-between bg-white/80 border border-gray-100 rounded-2xl p-4 group" style="animation-delay: 0.3s;">
+               class="link-btn btn-tg flex items-center justify-between rounded-2xl p-4 group" style="animation-delay: 0.3s;">
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
                         <img src="assets/telegram-icon.png" alt="Telegram" class="w-7 h-7">
                     </div>
-                    <span class="font-bold text-lg text-gray-800">تليجرام</span>
+                    <span class="font-bold text-lg text-white">تليجرام</span>
                 </div>
-                <svg class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                <svg class="w-6 h-6 text-white/70 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
             </a>
 
         </div>
 
-        <footer class="mt-12 text-center text-sm font-bold text-gray-400" style="animation-delay: 0.4s; transform: translateZ(10px);">
+        <footer class="mt-12 text-center text-sm font-bold text-brand-gold" style="animation-delay: 0.4s; transform: translateZ(15px);">
             © <span id="year"></span> Makka Scarf
         </footer>
     </main>
@@ -160,65 +174,68 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
         
-        // تشغيل الظهور بالترتيب
-        document.querySelectorAll('.link-btn, footer').forEach((el, index) => {
-            el.classList.add('animate-fade-in');
-            el.style.animationDelay = `${(index + 2) * 0.15}s`;
-            el.style.opacity = '0';
-        });
-
         const card = document.getElementById('tilt-card');
-        const hint = document.getElementById('touch-hint');
-        let permissionGranted = false;
+        const overlay = document.getElementById('start-overlay');
+        const startBtn = document.getElementById('start-btn');
 
-        function handleOrientation(e) {
-            if (!e.beta || !e.gamma) return;
+        // لما يدوس على الزرار عشان نطلب إذن الموبايل
+        startBtn.addEventListener('click', () => {
             
-            // معادلات لظبط الحركة وتنعيمها
-            let x = (e.beta - 45) / 3; 
-            let y = e.gamma / 3;       
-            
-            x = Math.max(-15, Math.min(15, x));
-            y = Math.max(-15, Math.min(15, y));
-
-            card.style.transform = `perspective(1000px) rotateX(${-x}deg) rotateY(${y}deg)`;
-        }
-
-        // دالة طلب الإذن من الموبايل
-        function requestOrientationPermission() {
-            if (permissionGranted) return;
-
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
                     .then(permissionState => {
                         if (permissionState === 'granted') {
                             window.addEventListener('deviceorientation', handleOrientation);
-                            permissionGranted = true;
-                            hint.style.display = 'none'; // نخفي الجملة بعد ما يلمس
                         }
                     })
                     .catch(console.error);
             } else {
-                // للأجهزة اللي مابتطلبش إذن صريح
+                // للأجهزة اللي مابتطلبش إذن
                 window.addEventListener('deviceorientation', handleOrientation);
-                permissionGranted = true;
-                hint.style.display = 'none';
             }
+
+            // إخفاء الشاشة الافتتاحية وإظهار الكارت
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                card.style.display = 'block';
+                
+                // تشغيل ظهور الزراير
+                document.querySelectorAll('.link-btn, footer').forEach((el, index) => {
+                    el.classList.add('animate-fade-in');
+                    el.style.animationDelay = `${(index + 2) * 0.15}s`;
+                    el.style.opacity = '0';
+                });
+            }, 500);
+        });
+
+        // حركة الموبايل
+        function handleOrientation(e) {
+            if (!e.beta || !e.gamma) return;
+            
+            // تظبيط الحساسية عشان الحركة تبقى ناعمة ومظبوطة
+            let x = (e.beta - 45) / 2; 
+            let y = e.gamma / 2;       
+            
+            x = Math.max(-20, Math.min(20, x));
+            y = Math.max(-20, Math.min(20, y));
+
+            card.style.transform = `rotateX(${-x}deg) rotateY(${y}deg)`;
         }
 
-        // أول ما المستخدم يلمس الشاشة هنطلب الإذن
-        document.body.addEventListener('touchstart', requestOrientationPermission, { once: true });
-        document.body.addEventListener('click', requestOrientationPermission, { once: true });
-
-        // حركة الكمبيوتر العادية
+        // حركة الماوس للكمبيوتر عشان لو فتحت من اللاب
         document.addEventListener('mousemove', (e) => {
-            let xAxis = (window.innerWidth / 2 - e.pageX) / 30;
-            let yAxis = (window.innerHeight / 2 - e.pageY) / 30;
-            card.style.transform = `perspective(1000px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            if (card.style.display !== 'none') {
+                let xAxis = (window.innerWidth / 2 - e.pageX) / 20;
+                let yAxis = (window.innerHeight / 2 - e.pageY) / 20;
+                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }
         });
 
         document.addEventListener('mouseleave', () => {
-            card.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg)`;
+            if (card.style.display !== 'none') {
+                card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            }
         });
     </script>
 </body>
