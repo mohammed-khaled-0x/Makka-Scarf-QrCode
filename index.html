@@ -134,12 +134,7 @@
 </head>
 <body class="relative min-h-screen flex flex-col items-center justify-center p-6 text-gray-800">
 
-    <div id="permission-modal">
-        <h2 class="text-2xl font-bold text-brand-maroon mb-6 text-center">عشان تشوف فخامة الـ 3D</h2>
-        <button id="start-btn" class="bg-brand-gold text-white font-bold py-3 px-10 rounded-xl shadow-lg text-lg animate-bounce">
-            المس هنا للبدء
-        </button>
-    </div>
+    
 
     <div class="animated-background">
         <div class="shape shape1"></div>
@@ -188,7 +183,7 @@
 
         const card = document.getElementById('the-card');
         const modal = document.getElementById('permission-modal');
-        const startBtn = document.getElementById('start-btn');
+        
 
         // حساب حركة الموبايل عشان تلف الكارت
         function handleOrientation(event) {
@@ -209,7 +204,7 @@
         }
 
         // لما يدوس على زرار البداية
-        startBtn.addEventListener('click', () => {
+        
             // طلب تصريح من الموبايل
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
@@ -231,7 +226,6 @@
             setTimeout(() => {
                 modal.style.display = 'none';
             }, 500);
-        });
 
         // تشغيل الحركة بالماوس لو فتحته من الكمبيوتر
         document.addEventListener('mousemove', (e) => {
