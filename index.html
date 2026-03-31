@@ -28,24 +28,20 @@
             background-color: #fdfbf7;
             overflow-x: hidden;
             position: relative;
-            /* خلفية ناعمة جدا تليق بالموبايل من غير دوشة ولا نقط */
             background-image: radial-gradient(circle at top right, rgba(202, 157, 81, 0.1), transparent 40%),
                               radial-gradient(circle at bottom left, rgba(140, 28, 35, 0.1), transparent 40%);
         }
 
-        /* المربع الزجاجي */
         .glass-card {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.9);
             box-shadow: 0 25px 50px -12px rgba(140, 28, 35, 0.12);
-            /* التحضير لحركة الموبايل */
-            transition: transform 0.15s ease-out;
+            transition: transform 0.1s ease-out;
             transform-style: preserve-3d;
         }
 
-        /* حركة الدخول */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -56,7 +52,6 @@
             animation: fadeInUp 0.8s ease-out forwards;
         }
 
-        /* الزراير */
         .link-btn {
             position: relative;
             overflow: hidden;
@@ -74,7 +69,6 @@
             z-index: 0;
         }
 
-        /* خليت التأثير يشتغل مع الهوفر للكمبيوتر ومع اللمس للموبايل */
         .link-btn:hover::before, .link-btn:active::before {
             right: 0;
         }
@@ -90,7 +84,6 @@
             transition: all 0.4s ease;
         }
 
-        /* ألوان التعبئة للزراير بالألوان الأصلية لكل منصة */
         .btn-fb::before { background-color: #1877F2; } 
         .btn-ig::before { background-image: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         .btn-tg::before { background-color: #2AABEE; }
@@ -100,7 +93,6 @@
             color: #ffffff !important;
         }
         
-        /* تبييض الأيقونات لما تقف عليها */
         .link-btn:hover img, .link-btn:active img {
             filter: brightness(0) invert(1);
             transform: scale(1.1); 
@@ -120,6 +112,7 @@
         <div class="text-center mt-2 mb-10" style="transform: translateZ(20px);">
             <h1 class="text-3xl font-extrabold text-brand-maroon mb-2">Makka Scarf</h1>
             <p class="text-gray-500 font-bold text-sm">لمسة إبداع في عالم الأناقة</p>
+            <p class="text-xs text-brand-gold mt-2 animate-pulse" id="touch-hint">المس الشاشة لتفعيل الحركة</p>
         </div>
 
         <div class="space-y-5" style="transform: translateZ(15px);">
@@ -174,29 +167,56 @@
             el.style.opacity = '0';
         });
 
-        // حركة الكارت مع ميل الموبايل 
         const card = document.getElementById('tilt-card');
-        
-        window.addEventListener('deviceorientation', (e) => {
-            if (e.beta && e.gamma) {
-                let x = (e.beta - 45) / 4; 
-                let y = e.gamma / 4;       
-                
-                x = Math.max(-15, Math.min(15, x));
-                y = Math.max(-15, Math.min(15, y));
+        const hint = document.getElementById('touch-hint');
+        let permissionGranted = false;
 
-                card.style.transform = `perspective(1000px) rotateX(${-x}deg) rotateY(${y}deg)`;
+        function handleOrientation(e) {
+            if (!e.beta || !e.gamma) return;
+            
+            // معادلات لظبط الحركة وتنعيمها
+            let x = (e.beta - 45) / 3; 
+            let y = e.gamma / 3;       
+            
+            x = Math.max(-15, Math.min(15, x));
+            y = Math.max(-15, Math.min(15, y));
+
+            card.style.transform = `perspective(1000px) rotateX(${-x}deg) rotateY(${y}deg)`;
+        }
+
+        // دالة طلب الإذن من الموبايل
+        function requestOrientationPermission() {
+            if (permissionGranted) return;
+
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                            permissionGranted = true;
+                            hint.style.display = 'none'; // نخفي الجملة بعد ما يلمس
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // للأجهزة اللي مابتطلبش إذن صريح
+                window.addEventListener('deviceorientation', handleOrientation);
+                permissionGranted = true;
+                hint.style.display = 'none';
             }
-        });
+        }
 
-        // حركة الكارت مع الماوس عشان لو فتحته من الكمبيوتر
+        // أول ما المستخدم يلمس الشاشة هنطلب الإذن
+        document.body.addEventListener('touchstart', requestOrientationPermission, { once: true });
+        document.body.addEventListener('click', requestOrientationPermission, { once: true });
+
+        // حركة الكمبيوتر العادية
         document.addEventListener('mousemove', (e) => {
-            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 30;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 30;
             card.style.transform = `perspective(1000px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
         });
 
-        // ترجيع الكارت مكانه
         document.addEventListener('mouseleave', () => {
             card.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg)`;
         });
